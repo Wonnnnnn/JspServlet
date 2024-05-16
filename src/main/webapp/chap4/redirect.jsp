@@ -6,12 +6,14 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@page language="java" contentType="text/html; charset=UTF-8"
-        pageEncoding="UTF-8" %>
+        pageEncoding="UTF-8" isELIgnored="false" %>
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
-<title>Title</title>
+<title>redirected</title>
 <body>
-<h2>index.jsp</h2>
+    <h2>redirected</h2>
+    <p>hello redirected page!</p>
+    redirected data ${shareInfo}!!!
 </body>
 </html>
