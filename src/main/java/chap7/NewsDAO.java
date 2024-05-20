@@ -33,7 +33,7 @@ public class NewsDAO {
     public void addNews(News news){
         open();
         String sql = "INSERT INTO news(title, img, date, content) values (?,?,CURRENT_TIMESTAMP(),?)";
-
+        System.out.println("addnews started");
         try{
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, news.getTitle());
@@ -55,7 +55,11 @@ public class NewsDAO {
         try {
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, aid);
-            pstmt.executeUpdate();
+            if(pstmt.executeUpdate() == 0){
+                throw new SQLException("추가 에러");
+            }
+//            pstmt.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Error deleting news with aid: " + aid);

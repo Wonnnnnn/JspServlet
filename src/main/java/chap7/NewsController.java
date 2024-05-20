@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 @WebServlet("/news.nhn")
@@ -37,22 +38,29 @@ public class NewsController extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
         String action = req.getParameter("action");
-        String view = null;
+        Method m;
+        String view = "";
         System.out.println("action: " + action);
 
         if(action == null){
             ctx.getRequestDispatcher("/news.nhn?action=listNews").forward(req,resp);
         } else{
-            switch (action){
-                case "listNews" :
-                    view = listNews(req); break;
-                case "addNews" :
-                    view = addNews(req); break;
-                case "getNews" :
-                    view = getNews(req); break;
-                case "deleteNews" :
-                    view = deleteNews(req); break;
+            try{
+                m = this.getClass().getMethod(action, HttpServletRequest.class);
+                view = (String)m.invoke(this, req);
+            } catch (Exception e){
+                e.printStackTrace();
             }
+//            switch (action){
+//                case "listNews" :
+//                    view = listNews(req); break;
+//                case "addNews" :
+//                    view = addNews(req); break;
+//                case "getNews" :
+//                    view = getNews(req); break;
+//                case "deleteNews" :
+//                    view = deleteNews(req); break;
+//            }
             if(view.startsWith("redirect:/")){
                 view = view.substring("redirect:/".length());
                 resp.sendRedirect(view);
@@ -63,7 +71,7 @@ public class NewsController extends HttpServlet {
     }
 
 
-    private String addNews(HttpServletRequest req){
+    public String addNews(HttpServletRequest req){
         News n = new News();
         try{
             Part part = req.getPart("img");
